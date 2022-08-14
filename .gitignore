@@ -40,3 +40,9 @@ lerna-debug.log*
 
 db/employees_data.sql
 db/employees_schema.sql
+
+.env
+.env.prod
+
+# tailwind auto generated
+public/css/mock.css
