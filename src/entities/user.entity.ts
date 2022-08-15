@@ -3,12 +3,14 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  Unique,
 } from "typeorm";
 
 @Entity()
+@Unique(["email"])
 export class UserEntity {
   @PrimaryGeneratedColumn("uuid")
-  id: number;
+  id: string;
 
   @Column("varchar")
   firstName: string;
@@ -18,6 +20,9 @@ export class UserEntity {
 
   @Column("varchar")
   username: string;
+
+  @Column("varchar")
+  email: string;
 
   /**
    * Password hash

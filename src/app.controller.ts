@@ -1,197 +1,195 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  InternalServerErrorException,
-  Post,
-  Render,
-  Req,
-} from '@nestjs/common';
-import { Request } from 'express';
-import { AppService } from './app.service';
-import { Client, Pool } from 'pg';
-import * as bcrypt from 'bcrypt';
+import { Controller, Delete, Get, Render, Req, Res } from "@nestjs/common";
+import { Request, Response } from "express";
+import * as superagent from "superagent";
+import { AppService } from "./app.service";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { ArtistEntity } from "./entities/artist.entity";
+import { TrackEntity } from "./entities/track.entity";
+import { AlbumEntity } from "./entities/album.entity";
 
 @Controller()
 export class AppController {
-  private pool: Pool;
-
-  constructor(private readonly appService: AppService) {
-    //Handlebars.registerPartial('partial', '{{prefix}}');
+  constructor(
+    private readonly appService: AppService,
+    @InjectRepository(ArtistEntity)
+    private artistsRepository: Repository<ArtistEntity>,
+    @InjectRepository(AlbumEntity)
+    private albumsRepository: Repository<AlbumEntity>,
+    @InjectRepository(TrackEntity)
+    private tracksRepository: Repository<TrackEntity>,
+  ) {
     // instantiate the database
     // docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pass -v ~/projects/webmock/db/employees-init.sh:/docker-entrypoint-initdb.d/employees.init.sh -v ~/projects/webmock/db/employees_data.sql:/employees.sql -d postgres
     // docker exec -ti postgres bash
-    this.pool = new Pool({
-      user: 'admin',
-      host: '127.0.0.1',
-      database: 'employees',
-      password: 'pass1234',
-      min: 10,
-    });
-  }
-
-  @Post('/register')
-  @Render('index')
-  async register(@Req() req: Request) {
-    // TODO register
-    // intentionally do it without connection pooling
-    const client = new Client({
-      user: 'admin',
-      host: '127.0.0.1',
-      database: 'employees',
-      password: 'pass1234',
-    });
-
-    await client.connect();
-
-    const body: {
-      email: string;
-      password: string;
-      passwordConfirmation: string;
-    } = req.body;
-
-    if (body.password !== body.passwordConfirmation)
-      throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
-
-    try {
-      await new Promise<void>((resolve, reject) => {
-        client.query(
-          'INSERT INTO employees.users(email, password) VALUES($1, $2)',
-          [body.email, bcrypt.hashSync(body.password, 10)],
-          (err, result) => {
-            if (err) {
-              switch ((err as unknown as { code: string }).code) {
-                case '23505':
-                  reject(
-                    new BadRequestException('Email is already registered'),
-                  );
-                  break;
-                default:
-                  console.log(err);
-                  reject(new InternalServerErrorException());
-              }
-            }
-
-            resolve();
-          },
-        );
-      });
-    } finally {
-      client.end();
-    }
-
-    return {
-      title: `${body.email} successfully registered. You can now log in`,
-    };
-  }
-
-  @Post('/login')
-  @Render('menu')
-  async login(@Req() req: Request) {
-    // TODO login
-    // do it with connection pooling
-    const conn = await this.pool.connect();
-
-    const body: { email: string; password: string } = req.body;
-
-    try {
-      await new Promise<void>((resolve, reject) => {
-        // table is not indexed so we should expect poor performance
-        conn.query(
-          'SELECT password FROM employees.users WHERE email=$1',
-          [body.email],
-          (err, result) => {
-            if (err) return reject(new InternalServerErrorException());
-
-            if (result.rowCount != 1)
-              return reject(
-                new BadRequestException('Invalid email or password'),
-              );
-
-            if (bcrypt.compareSync(body.password, result.rows[0].password))
-              return resolve();
-          },
-        );
-      });
-    } finally {
-      conn.release();
-    }
-
-    // TODO generate cookie for authentication
-
-    return { email: body.email };
-  }
-
-  @Get('/salary')
-  @Render('salary-query')
-  async querySalary(@Req() req: Request) {
-    const queries = req.query;
-    let query = 'SELECT * FROM employees.salary';
-    const queryParams = [];
-
-    if (Object.keys(queries).length > 0) {
-      query += ' WHERE 1=1';
-
-      if (queries.minAmount) {
-        query += ` AND amount > $${queryParams.length + 1}`;
-        queryParams.push(queries.minAmount);
-      }
-
-      if (queries.employeeId) {
-        query += ` AND employee_id = $${queryParams.length + 1}`;
-        queryParams.push(queries.employeeId);
-      }
-
-      if (queries.fromDate) {
-        query += ` AND from_date = $${queryParams.length + 1}::date`;
-        queryParams.push(queries.fromDate);
-      }
-
-      if (queries.toDate) {
-        query += ` AND to_date = $${queryParams.length + 1}::date`;
-        queryParams.push(queries.toDate);
-      }
-    }
-
-    query += ' LIMIT 100';
-
-    const conn = await this.pool.connect();
-
-    try {
-      const employees = await new Promise<{
-        employee_id: number;
-        amount: number;
-        from_date: Date;
-        to_date: Date;
-      }>((resolve, reject) => {
-        // table is not indexed so we should expect poor performance
-        conn.query(query, queryParams, (err, result) => {
-          if (err) return reject(new InternalServerErrorException());
-
-          return resolve(
-            result.rows as unknown as {
-              employee_id: number;
-              amount: number;
-              from_date: Date;
-              to_date: Date;
-            },
-          );
-        });
-      });
-
-      return { employees };
-    } finally {
-      conn.release();
-    }
-
-    return new InternalServerErrorException();
   }
 
   @Get()
-  @Render('index')
-  root() {
-    return { title: 'Welcome to the super mock site!' };
+  async root(@Req() req: Request, @Res() res: Response) {
+    if (!req.session.userId) return res.render("index");
+
+    let artists: ArtistEntity[];
+    try {
+      artists = await this.artistsRepository.find();
+    } catch (e) {
+      console.error("Error while retrieving artists", e);
+      return res.render("error", {
+        statusCode: 500,
+        message: "Error while loading home page",
+        details: "Couldn't fetch artists",
+      });
+    }
+
+    return res.render("home", {
+      ...req.session,
+      artists,
+    });
   }
+
+  @Get("/500")
+  @Render("error")
+  error500() {
+    return {
+      statusCode: 500,
+      message: "Just testing the error page looks good",
+      details: "Details about the error go here..........",
+    };
+  }
+
+  /**
+   * Delete all the music currently saved
+   */
+  @Delete("/music")
+  delete() {
+    this.tracksRepository
+      .clear()
+      .then(() => this.albumsRepository.clear())
+      .then(() => this.artistsRepository.clear());
+  }
+
+  /**
+   * Populate the database with some records
+   */
+  @Get("/music")
+  async populate() {
+    // TODO populate artists
+    const artists = [
+      "eminem",
+      "dua lipa",
+      "residente",
+      "vico c",
+      "birdy",
+      "ana tijoux",
+      "Zoe",
+      "The chainsmokers",
+      "Natalia Lafourcade",
+      "Kygo",
+      "Florence + The Machine",
+      "M83",
+    ];
+
+    // save artists
+    const promises = artists
+      .map((artist) =>
+        superagent
+          .get(`https://api.deezer.com/search/artist?q=${artist}`)
+          .accept("application/json"),
+      )
+      .map((p) => p.then((res) => res.body).catch(console.error))
+      .map((p) => p.then((body) => body.data[0]))
+      .map((p) =>
+        p.then((deezerArtist: DeezerArtist) => {
+          const artist = new ArtistEntity();
+          artist.name = deezerArtist.name;
+          artist.picture = deezerArtist.picture_medium;
+          artist.nFans = deezerArtist.nb_fan;
+          artist.nAlbums = deezerArtist.nb_album;
+          artist.id = deezerArtist.id;
+          artist.link = deezerArtist.link;
+
+          this.artistsRepository
+            .save(artist)
+            .then((artist) =>
+              console.log(`Saved artist ${artist.name} (id ${artist.id})`),
+            )
+            .catch(console.error);
+
+          return artist;
+        }),
+      );
+
+    // save albums
+    const savedAlbums: AlbumEntity[] = [];
+    const savedArtists = await Promise.all(promises);
+    for (const artist of savedArtists) {
+      const res = await superagent
+        .get(`https://api.deezer.com/artist/${artist.id}/albums`)
+        .accept("application/json");
+
+      for (let deezerAlbum of res.body.data) {
+        deezerAlbum = deezerAlbum as DeezerAlbum;
+        const album = new AlbumEntity();
+        album.title = deezerAlbum.title;
+        album.cover = deezerAlbum.cover_medium;
+        album.link = deezerAlbum.link;
+        album.id = deezerAlbum.id;
+        album.artist = artist;
+
+        this.albumsRepository
+          .save(album)
+          .then((album) => {
+            console.log(`Saved album ${album.title} (${album.artist.name})`);
+            savedAlbums.push(album);
+          })
+          .catch(console.error);
+      }
+    }
+
+    // save tracks
+    for (const album of savedAlbums) {
+      const res = await superagent
+        .get(`https://api.deezer.com/album/${album.id}/tracks`)
+        .accept("application/json");
+
+      for (let deezerTrack of res.body.data) {
+        deezerTrack = deezerTrack as DeezerTrack;
+        const track = new TrackEntity();
+        track.title = deezerTrack.title;
+        track.link = deezerTrack.link;
+        track.id = deezerTrack.id;
+        track.album = album;
+        track.preview = deezerTrack.preview;
+
+        this.tracksRepository
+          .save(track)
+          .then((track) => {
+            console.log(`Saved track ${track.title} (${track.album.title})`);
+          })
+          .catch(console.error);
+      }
+    }
+  }
+}
+
+interface DeezerArtist {
+  id: number;
+  name: string;
+  link: string;
+  picture_medium: string;
+  nb_album: number;
+  nb_fan: number;
+}
+
+interface DeezerAlbum {
+  id: number;
+  title: string;
+  link: string;
+  cover_medium: string;
+}
+
+interface DeezerTrack {
+  id: number;
+  title: string;
+  link: string;
+  preview: string;
 }

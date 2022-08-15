@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Super mock - Home</title>
+  <link rel="stylesheet" href="/css/mock.css">
+</head>
+<body class="bg-gray-900 px-5 text-white">
+  <h1 class="text-3xl text-center font-bold pt-5">Super mock</h1>
+  <h1 class="text-2xl text-center font-medium pt-3">Calm & ready</h1>
+
+  <div class="px-5 py-8">
+    <p class="text-xl">Welcome <span class="font-bold"><%= username %></span> (<%= lastName %>, <%= firstName %>)</p>
+<!--    <p>You can add any particular album or song you like to your cart</p>-->
+  </div>
+
+  <div class="flex justify-around flex-wrap gap-4 md:gap-8">
+    <% artists.forEach(artist => { %>
+      <%- include('artist', {artist: artist}); %>
+    <% }); %>
+  </div>
+</body>
+</html>

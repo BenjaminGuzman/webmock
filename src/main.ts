@@ -1,25 +1,48 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { Request } from 'express';
-import * as morgan from 'morgan';
-import * as path from 'path';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import * as morgan from "morgan";
+import * as path from "path";
+import { ConfigService } from "@nestjs/config";
+import { ValidationPipe } from "@nestjs/common/pipes";
+import * as session from "express-session";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useStaticAssets(path.join(__dirname, "..", "public"));
+  app.setBaseViewsDir(path.join(__dirname, "..", "views"));
+  app.setViewEngine("ejs");
+
+  app.use(
+    session({
+      secret: "hola mundo mundial!!!",
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
+
+  const morganLog = morgan("combined");
+  app.use((req, res, next) => {
+    if (req.headers["x-forwarded-for"])
+      process.stdout.write(
+        `X-Forwarded-For: ${req.headers["x-forwarded-for"]} `,
+      );
+    morganLog(req, res, next);
   });
 
-  app.useStaticAssets(path.join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(path.join(__dirname, '..', 'views'));
-  app.setViewEngine('hbs');
-  app.use((req: Request, res: Response, next) => {
-    if (req.headers['X-Forwarded-For'])
-      req.ip = req.headers['X-Forwarded-For'] as string;
-    next();
-  });
-  app.use(morgan('combined'));
-
-  await app.listen(3000);
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get("PORT"));
 }
 bootstrap();
+
+declare module "express-session" {
+  export interface SessionData {
+    userId: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  }
+}

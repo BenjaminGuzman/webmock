@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+    @apply w-full h-full;
+}
+
 input {
     @apply text-white bg-gray-700 px-2 py-1 focus:outline-none;
 }
