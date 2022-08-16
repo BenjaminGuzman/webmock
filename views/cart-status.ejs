@@ -1,3 +1,10 @@
 <div class="px-5">
-    <p>You have <span class="font-medium">x</span> tracks in your cart</p>
+    <% if (!locals.cart || !cart.tracks || cart.tracks.length === 0) { %>
+        <p class="flex gap-2 items-center">
+            <span class="material-icons">sentiment_very_dissatisfied</span>
+            You don't have any tracks in your cart!
+        </p>
+    <% } else { %>
+        <p>You have <span class="font-medium"><%= cart.tracks.length %></span> tracks in your cart. <a href="/cart" class="link">Go to cart</a></p>
+    <% } %>
 </div>

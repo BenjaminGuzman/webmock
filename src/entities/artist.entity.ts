@@ -6,19 +6,19 @@ export class ArtistEntity {
   @PrimaryColumn("int")
   id: number;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: false })
   name: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   link: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   picture: string;
 
-  @Column("int")
+  @Column("int", { nullable: true })
   nAlbums: number;
 
-  @Column("int")
+  @Column("int", { nullable: true })
   nFans: number;
 
   @OneToMany(() => AlbumEntity, (album) => album.artist)

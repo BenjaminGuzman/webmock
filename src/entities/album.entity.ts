@@ -7,13 +7,13 @@ export class AlbumEntity {
   @PrimaryColumn("int")
   id: number;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: false })
   title: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   link: string;
 
-  @Column("varchar")
+  @Column("varchar", { nullable: true })
   cover: string;
 
   @ManyToOne(() => ArtistEntity, (artist) => artist.albums)

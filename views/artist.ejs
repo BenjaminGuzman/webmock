@@ -13,14 +13,15 @@
 
 <%- include('header') %>
 
-<%- include('cart-status', {username}) %>
+<%- include('cart-status', {username, cart}) %>
 
 <div class="flex justify-center mx-4 md:mx-8 xl:mx-16 py-5 gap-3">
-    <img src="<%- artist.picture %>" alt="<%= artist.name %>">
-    <div class="flex flex-col h-full">
-        <p><%= artist.name %></p>
-        <a href="<%- artist.link %>" title="<%= artist.name %> on Deezer">
+    <img src="<%- artist.picture %>" alt="<%= artist.name %>" class="max-w-[14rem] max-h-[14rem]">
+    <div class="flex flex-col h-full gap-3 items-start">
+        <p class="text-3xl"><%= artist.name %></p>
+        <a target="_blank" href="<%- artist.link %>" title="<%= artist.name %> on Deezer" class="flex gap-2 items-center">
             <img src="/img/deezer.min.webp" alt="" class="w-8 h-8">
+            <span class="link">Deezer</span>
         </a>
         <div title="# fans" class="flex justify-center gap-1">
             <span class="material-icons">favorite</span>
@@ -32,13 +33,14 @@
         </div>
     </div>
 </div>
+<p class="text-2xl py-3 px-5"><%= artist.name %>'s albums</p>
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8 justify-center items-start align-top py-5 mx-4 md:mx-8 xl:mx-16">
     <% artist.albums.forEach(album => { %>
     <div class="flex flex-col justify-center items-center text-center gap-3">
         <a href="/album/<%= album.id %>">
             <img src="<%= album.cover %>" alt="<%= album.title%>" class="block max-w-[12rem] hover:scale-110 transition-transform">
         </a>
-        <a href="/album/<%= album.id %>" class="underline hover:text-blue-300"><%= album.title %></a>
+        <a href="/album/<%= album.id %>" class="link"><%= album.title %></a>
     </div>
     <% }); %>
 </div>

@@ -44,5 +44,8 @@ declare module "express-session" {
     firstName: string;
     lastName: string;
     email: string;
+    cart: {
+      tracks: number[];
+    };
   }
 }

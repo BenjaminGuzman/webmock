@@ -14,7 +14,7 @@
 <!--    <p>You can add any particular album or song you like to your cart</p>-->
   </div>
 
-  <%- include('cart-status', {username}) %>
+  <%- include('cart-status', {username, cart}) %>
 
   <div class="flex justify-around flex-wrap gap-4 md:gap-8 pt-5">
     <% if (!artists.length) { %>
@@ -31,6 +31,6 @@
     <% }); %>
   </div>
 
-  <script src="/js/home.js"></script>
+  <script src="/js/home.js" defer></script>
 </body>
 </html>

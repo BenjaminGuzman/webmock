@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
   Req,
   Res,
@@ -88,6 +89,18 @@ export class UsersController {
         details: e.message,
       });
     }
+
+    return res.redirect("/");
+  }
+
+  @Get("/logout")
+  async logout(@Req() req: Request, @Res() res: Response) {
+    await new Promise<void>((resolve, reject) => {
+      req.session.destroy((err) => {
+        if (err) console.error(err);
+        return resolve();
+      });
+    });
 
     return res.redirect("/");
   }

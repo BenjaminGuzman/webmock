@@ -10,6 +10,7 @@ import { AlbumEntity } from "./entities/album.entity";
 import { TrackEntity } from "./entities/track.entity";
 import { ArtistEntity } from "./entities/artist.entity";
 import { MusicModule } from "./music/music.module";
+import { CartController } from "./cart/cart.controller";
 
 @Module({
   imports: [
@@ -49,7 +50,7 @@ import { MusicModule } from "./music/music.module";
     UsersModule,
     MusicModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, CartController],
   providers: [AppService],
 })
 export class AppModule {}

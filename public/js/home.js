@@ -1,5 +1,5 @@
 const initDB = async () => {
-  const res = await fetch("/music", {
+  const res = await fetch("/populate", {
     method: "POST",
   });
 

@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Post, Render, Req, Res } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Render,
+  Req,
+  Res,
+} from "@nestjs/common";
 import { Request, Response } from "express";
 import * as superagent from "superagent";
 import { AppService } from "./app.service";
@@ -43,6 +51,7 @@ export class AppController {
     return res.render("home", {
       ...req.session,
       artists,
+      cart: req.session.cart,
     });
   }
 
@@ -70,7 +79,7 @@ export class AppController {
   /**
    * Populate the database with some records
    */
-  @Post("/music")
+  @Post("/populate")
   async populate() {
     const artists = [
       "eminem",
@@ -86,6 +95,18 @@ export class AppController {
       "Florence + The Machine",
       "M83",
     ];
+
+    try {
+      const nRegisteredArtists = await this.artistsRepository.count();
+      if (nRegisteredArtists > 0)
+        return {
+          success: false,
+          message: "DB_DIRTY",
+          details: "Database may have already been initialized",
+        };
+    } catch (e) {
+      console.error(e);
+    }
 
     // save artists
     const promises = artists
@@ -158,6 +179,7 @@ export class AppController {
         track.id = deezerTrack.id;
         track.album = album;
         track.preview = deezerTrack.preview;
+        track.price = Math.floor(Math.random() * 10 + 1);
 
         this.tracksRepository
           .save(track)
@@ -167,6 +189,12 @@ export class AppController {
           .catch(console.error);
       }
     }
+
+    return {
+      success: true,
+      message: "SUCCESS",
+      details: "Database successfully initialized",
+    };
   }
 }
 
