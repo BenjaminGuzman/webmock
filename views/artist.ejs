@@ -1,12 +1,48 @@
-<div class="max-w-xs max-h-96 flex flex-col px-4 py-5 bg-black">
-    <div style="background-image: url(<%- artist.picture %>)" class="bg-cover bg-center rounded-full w-44 h-44 hover:scale-110 transition-transform">
-        <a href="/artist/<%- artist.id %>" class="h-full w-full bg-black bg-opacity-40 text-center flex flex-col justify-center rounded-full">
-            <span><%- artist.name %></span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Super mock - Home</title>
+    <link rel="stylesheet" href="/css/mock.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body class="bg-gray-900 px-5 text-white">
+<button class="fixed top-5 left-5" onclick="history.back()" title="Go back">
+    <span class="material-icons">arrow_back</span>
+</button>
+
+<%- include('header') %>
+
+<%- include('cart-status', {username}) %>
+
+<div class="flex justify-center mx-4 md:mx-8 xl:mx-16 py-5 gap-3">
+    <img src="<%- artist.picture %>" alt="<%= artist.name %>">
+    <div class="flex flex-col h-full">
+        <p><%= artist.name %></p>
+        <a href="<%- artist.link %>" title="<%= artist.name %> on Deezer">
+            <img src="/img/deezer.min.webp" alt="" class="w-8 h-8">
         </a>
-    </div>
-    <div class="flex flex-col">
-        <%= artist.nAlbums %>, <%= artist.nFans %>
-        <a href="<%- artist.link %>">Deezer</a>
-        Add to cart
+        <div title="# fans" class="flex justify-center gap-1">
+            <span class="material-icons">favorite</span>
+            <span><%= artist.nFans %></span>
+        </div>
+        <div title="# albums" class="flex justify-center gap-1">
+            <span class="material-icons">album</span>
+            <span><%= artist.nAlbums %></span>
+        </div>
     </div>
 </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8 justify-center items-start align-top py-5 mx-4 md:mx-8 xl:mx-16">
+    <% artist.albums.forEach(album => { %>
+    <div class="flex flex-col justify-center items-center text-center gap-3">
+        <a href="/album/<%= album.id %>">
+            <img src="<%= album.cover %>" alt="<%= album.title%>" class="block max-w-[12rem] hover:scale-110 transition-transform">
+        </a>
+        <a href="/album/<%= album.id %>" class="underline hover:text-blue-300"><%= album.title %></a>
+    </div>
+    <% }); %>
+</div>
+
+<script src="/js/home.js"></script>
+</body>
+</html>

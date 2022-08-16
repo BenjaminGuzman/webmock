@@ -1,13 +1,19 @@
-import { IsEmail, IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import {
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 
 export class UserRegisterDTO {
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(2)
   @MaxLength(255)
   firstName: string;
 
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(2)
   @MaxLength(255)
   lastName: string;
 
@@ -21,6 +27,7 @@ export class UserRegisterDTO {
   username: string;
 
   @IsNotEmpty()
+  //@IsDate()
   dob: Date;
 
   @IsNotEmpty()

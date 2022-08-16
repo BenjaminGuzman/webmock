@@ -9,6 +9,7 @@ import { AppController } from "./app.controller";
 import { AlbumEntity } from "./entities/album.entity";
 import { TrackEntity } from "./entities/track.entity";
 import { ArtistEntity } from "./entities/artist.entity";
+import { MusicModule } from "./music/music.module";
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ArtistEntity } from "./entities/artist.entity";
     }),
     TypeOrmModule.forFeature([ArtistEntity, AlbumEntity, TrackEntity]),
     UsersModule,
+    MusicModule,
   ],
   controllers: [AppController],
   providers: [AppService],

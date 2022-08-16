@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Render, Req, Res } from "@nestjs/common";
+import { Controller, Delete, Get, Post, Render, Req, Res } from "@nestjs/common";
 import { Request, Response } from "express";
 import * as superagent from "superagent";
 import { AppService } from "./app.service";
@@ -70,9 +70,8 @@ export class AppController {
   /**
    * Populate the database with some records
    */
-  @Get("/music")
+  @Post("/music")
   async populate() {
-    // TODO populate artists
     const artists = [
       "eminem",
       "dua lipa",
@@ -109,9 +108,9 @@ export class AppController {
 
           this.artistsRepository
             .save(artist)
-            .then((artist) =>
-              console.log(`Saved artist ${artist.name} (id ${artist.id})`),
-            )
+            // .then((artist) =>
+            //   console.log(`Saved artist ${artist.name} (id ${artist.id})`),
+            // )
             .catch(console.error);
 
           return artist;
@@ -138,7 +137,7 @@ export class AppController {
         this.albumsRepository
           .save(album)
           .then((album) => {
-            console.log(`Saved album ${album.title} (${album.artist.name})`);
+            // console.log(`Saved album ${album.title} (${album.artist.name})`);
             savedAlbums.push(album);
           })
           .catch(console.error);
@@ -162,9 +161,9 @@ export class AppController {
 
         this.tracksRepository
           .save(track)
-          .then((track) => {
-            console.log(`Saved track ${track.title} (${track.album.title})`);
-          })
+          // .then((track) => {
+          //   console.log(`Saved track ${track.title} (${track.album.title})`);
+          // })
           .catch(console.error);
       }
     }
