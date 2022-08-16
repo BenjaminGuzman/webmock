@@ -94,6 +94,13 @@ export class AppController {
       "Kygo",
       "Florence + The Machine",
       "M83",
+      "oh wonder",
+      "Carla Morrison",
+      "Cancerbero",
+      "onerepublic",
+      "imagine dragons",
+      "Calvin Harris",
+      "Cartel de santa",
     ];
 
     try {
@@ -179,7 +186,7 @@ export class AppController {
         track.id = deezerTrack.id;
         track.album = album;
         track.preview = deezerTrack.preview;
-        track.price = Math.floor(Math.random() * 10 + 1);
+        track.price = `${Math.floor(Math.random() * 10 + 1)}`;
 
         this.tracksRepository
           .save(track)
