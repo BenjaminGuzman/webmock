@@ -18,5 +18,5 @@ const initDB = async (btn) => {
       );
   }
 
-  location.reload();
+  setTimeout(() => location.reload(), 3_000);
 };
