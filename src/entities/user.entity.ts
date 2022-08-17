@@ -8,6 +8,7 @@ import {
 
 @Entity()
 @Unique(["email"])
+@Unique(["username"])
 export class UserEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
