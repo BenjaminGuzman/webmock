@@ -46,7 +46,12 @@ import { CartController } from "./cart/cart.controller";
         },
       }),
     }),
-    TypeOrmModule.forFeature([ArtistEntity, AlbumEntity, TrackEntity]),
+    TypeOrmModule.forFeature([
+      ArtistEntity,
+      AlbumEntity,
+      TrackEntity,
+      UserEntity,
+    ]),
     UsersModule,
     MusicModule,
   ],

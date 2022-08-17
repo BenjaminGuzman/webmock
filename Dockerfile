@@ -1,5 +1,5 @@
 # stage 1: build cache
-FROM node as builder
+FROM node:18-alpine3.15 as builder
 COPY ["package.json", "package-lock.json", "/usr/src/"]
 
 WORKDIR /usr/src
@@ -17,6 +17,8 @@ COPY ["package.json", "package-lock.json", "/usr/src/"]
 WORKDIR /usr/src
 
 COPY --from=builder ["/usr/src/", "/usr/src/"]
-EXPOSE 3000
 
-ENTRYPOINT ["npm", "run", "start:prod"]
+VOLUME ["/usr/src/.env"]
+
+EXPOSE 3000
+ENTRYPOINT ["node", "dist/main.js"]

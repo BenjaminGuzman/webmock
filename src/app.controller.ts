@@ -1,7 +1,7 @@
 import {
   Controller,
   Delete,
-  Get,
+  Get, InternalServerErrorException,
   Post,
   Render,
   Req,
@@ -15,6 +15,7 @@ import { Repository } from "typeorm";
 import { ArtistEntity } from "./entities/artist.entity";
 import { TrackEntity } from "./entities/track.entity";
 import { AlbumEntity } from "./entities/album.entity";
+import { UserEntity } from "./entities/user.entity";
 
 @Controller()
 export class AppController {
@@ -26,6 +27,8 @@ export class AppController {
     private albumsRepository: Repository<AlbumEntity>,
     @InjectRepository(TrackEntity)
     private tracksRepository: Repository<TrackEntity>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
   ) {
     // instantiate the database
     // docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pass -v ~/projects/webmock/db/employees-init.sh:/docker-entrypoint-initdb.d/employees.init.sh -v ~/projects/webmock/db/employees_data.sql:/employees.sql -d postgres
@@ -69,11 +72,31 @@ export class AppController {
    * Delete all the music currently saved
    */
   @Delete("/music")
-  delete() {
-    this.tracksRepository
-      .clear()
-      .then(() => this.albumsRepository.clear())
-      .then(() => this.artistsRepository.clear());
+  async deleteMusic() {
+    try {
+      await this.tracksRepository
+        .clear()
+        .then(() => this.albumsRepository.clear())
+        .then(() => this.artistsRepository.clear());
+      return { success: true };
+    } catch (e) {
+      console.error("Error while deleting all music", e);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  /**
+   * Delete all the users currently registered
+   */
+  @Delete("/users")
+  async deleteUsers() {
+    try {
+      await this.usersRepository.clear();
+      return { success: true };
+    } catch (e) {
+      console.error("Error while deleting all users", e);
+      throw new InternalServerErrorException();
+    }
   }
 
   /**
@@ -101,6 +124,12 @@ export class AppController {
       "imagine dragons",
       "Calvin Harris",
       "Cartel de santa",
+      "Boyz noise",
+      "Son Lux",
+      "Lost Years",
+      "Mac Quayle",
+      "HiTNRuN",
+      "Kavinsky",
     ];
 
     try {
@@ -162,7 +191,7 @@ export class AppController {
         album.id = deezerAlbum.id;
         album.artist = artist;
 
-        this.albumsRepository
+        await this.albumsRepository
           .save(album)
           .then((album) => {
             // console.log(`Saved album ${album.title} (${album.artist.name})`);
@@ -188,7 +217,7 @@ export class AppController {
         track.preview = deezerTrack.preview;
         track.price = `${Math.floor(Math.random() * 10 + 1)}`;
 
-        this.tracksRepository
+        await this.tracksRepository
           .save(track)
           // .then((track) => {
           //   console.log(`Saved track ${track.title} (${track.album.title})`);

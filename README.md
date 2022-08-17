@@ -1,36 +1,16 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Web mock
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**Mock** web application. You can use it to learn about testing.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+To practice performance testing, you can do some tests with version 1, which is intentionally and deliberately developed
+with some errors and bad practices, such as:
 
-## Description
+- Pool size is small
+- Backend code may use synchronized code (blocking the event loop)
+- Database has some non-indexed tables
+- MemoryStore is used to store sessions (memory leak)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
-```
+And then, you can run the same tests with **version 2** (branch v2) which **lacks of the errors** mentioned above.
 
 ## Running the app
 
@@ -40,34 +20,54 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+## Deploy
+
+1. Copy important files
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# copy init files to server (run on local machine)
+scp db/db-init.sh user@testing.example.com:~/db/db-init.sh
+scp docker-compose.yml .env.prod user@testing.example.com:~ # you should create your own .env.prod, see .env.example 
 ```
 
-## Support
+2. Start the application
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# (run on server)
+sudo docker compose up -d
+```
 
-## Stay in touch
+3. Install nginx and (optionally) create a Let's Encrypt certificate
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+# install nginx
+sudo dnf install nginx
+
+# configure nginx (make sure you update the config before executing. Run on your local machine)
+sed -i "s/testing.example.com/mydomain.com/" testing.example.com.conf && cp testing.example.com.conf mydomain.com.conf # make sure you update the domain name
+scp mydomain.com.conf user@mydomain.com:/etc/nginx/conf.d/mydomain.com.conf
+
+# install let's encrypt certificate (run on server)
+sudo dnf install epel-release
+sudo dnf install certbot python3-certbot-nginx
+sudo certbot --nginx -d mydomain.com
+```
+
+## Usage
+
+### Special endpoints
+
+These endpoints don't need a request body, and usually they won't return a response body.
+So, to check the operation was successfully you may check the response status code. 
+
+- DELETE `/music`: Will clear the music database (users will remain intact)
+
+- DELETE `/users`: Will clear all the users' database (music will remain intact)
+
+- POST `/populate`: Will insert some artists, albums and tracks in the database
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+GPLv3
