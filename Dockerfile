@@ -1,24 +1,20 @@
 # stage 1: build cache
 FROM node:18-alpine3.15 as builder
-COPY ["package.json", "package-lock.json", "/usr/src/"]
+COPY ["package.json", "package-lock.json", "/usr/src/deps/"]
 
-WORKDIR /usr/src
+WORKDIR /usr/src/deps
 RUN npm install --omit=dev
-
-COPY ["public/", "/usr/src/public"]
-COPY ["views/", "/usr/src/views"]
-COPY ["dist/", "/usr/src/dist"]
 
 # stage 2: build production image
 FROM node:18-alpine3.15
 
-COPY ["package.json", "package-lock.json", "/usr/src/"]
-
-WORKDIR /usr/src
-
-COPY --from=builder ["/usr/src/", "/usr/src/"]
+COPY --from=builder ["/usr/src/deps/", "/usr/src/"]
+COPY ["public/", "/usr/src/public"]
+COPY ["views/", "/usr/src/views"]
+COPY ["dist/", "/usr/src/dist"]
 
 VOLUME ["/usr/src/.env"]
 
+WORKDIR /usr/src
 EXPOSE 3000
 ENTRYPOINT ["node", "dist/main.js"]
