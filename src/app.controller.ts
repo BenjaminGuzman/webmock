@@ -75,10 +75,11 @@ export class AppController {
   @Delete("/music")
   async deleteMusic() {
     try {
+      // FIXME using delete to delete all records is inefficient, use TRUNCATE instead
       await this.tracksRepository
-        .clear()
-        .then(() => this.albumsRepository.clear())
-        .then(() => this.artistsRepository.clear());
+        .delete({})
+        .then(() => this.albumsRepository.delete({}))
+        .then(() => this.artistsRepository.delete({}));
       return { success: true };
     } catch (e) {
       console.error("Error while deleting all music", e);
