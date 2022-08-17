@@ -105,7 +105,17 @@ export class AppController {
    * Populate the database with some records
    */
   @Post("/populate")
-  async populate() {
+  populate() {
+    this.populateMusic(); // Yes, don't wait until the promise is resolved. We want to populate the database asynchronously
+
+    return {
+      success: true,
+      message: "SUCCESS",
+      details: "Database successfully initialized",
+    };
+  }
+
+  private async populateMusic() {
     const artists = [
       "eminem",
       "dua lipa",
@@ -227,12 +237,6 @@ export class AppController {
           .catch(console.error);
       }
     }
-
-    return {
-      success: true,
-      message: "SUCCESS",
-      details: "Database successfully initialized",
-    };
   }
 }
 
