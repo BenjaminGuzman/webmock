@@ -1,5 +1,5 @@
 const addTrack2Cart = (id, button) => {
-  fetch("/cart/add", {
+  fetch("/v1/cart/add", {
     headers: {
       "Content-Type": "application/json",
     },

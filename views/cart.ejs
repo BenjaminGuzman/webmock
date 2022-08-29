@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Super mock - Home</title>
-    <link rel="stylesheet" href="/css/mock.css">
+    <link rel="stylesheet" href="/v1/css/mock.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body class="bg-gray-900 px-5 text-white">
@@ -17,7 +17,7 @@
     <% if (!locals.cart || Object.keys(cart).length === 0) { %>
         <p>You don't have any tracks in your cart</p>
         <p>To add a track to your cart you can select any artist you like, then select an album, and then add any track you like to your cart</p>
-        <p>Go check all the <a href="/" class="link">artists</a> we have</p>
+        <p>Go check all the <a href="/v1/" class="link">artists</a> we have</p>
     <% } else { %>
         <p class="mb-5 text-lg">These are the tracks you've added to your cart</p>
         <div class="flex flex-col gap-6">
@@ -33,10 +33,10 @@
                                 <div class="flex-grow">
                                     <p class="w-full mb-2"><%= track.title %></p>
                                     <p>$<%= track.price %> USD</p>
-                                    <audio class="w-full" src="<%= track.preview %>" controls></audio>
+                                    <audio class="w-full" src="/v1<%= track.preview %>" controls></audio>
                                 </div>
-                                <a target="_blank" href="<%= track.link %>" title="Listen to <%= track.title %> on Deezer">
-                                    <img src="/img/deezer.min.webp" alt="Deezer" class="w-8 h-8">
+                                <a target="_blank" href="/v1<%= track.link %>" title="Listen to <%= track.title %> on Deezer">
+                                    <img src="/v1/img/deezer.min.webp" alt="Deezer" class="w-8 h-8">
                                 </a>
                             </div>
                         <% }); %>
@@ -53,6 +53,6 @@
     </div>
 </div>
 
-<script src="/js/home.js" defer></script>
+<script src="/v1/js/home.js" defer></script>
 </body>
 </html>

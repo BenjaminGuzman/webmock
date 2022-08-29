@@ -10,8 +10,9 @@ import * as session from "express-session";
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.setGlobalPrefix("v1");
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.useStaticAssets(path.join(__dirname, "..", "public"));
+  app.useStaticAssets(path.join(__dirname, "..", "public"), { prefix: "/v1" });
   app.setBaseViewsDir(path.join(__dirname, "..", "views"));
   app.setViewEngine("ejs");
 

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Super mock</title>
-  <link href="/css/mock.css" rel="stylesheet">
-  <link href="/css/index.css" rel="stylesheet">
+  <link href="/v1/css/mock.css" rel="stylesheet">
+  <link href="/v1/css/index.css" rel="stylesheet">
 </head>
 <body class="bg-cover bg-center bg-fixed text-white flex flex-col gap-5">
   <!-- background overlay -->
@@ -19,7 +19,7 @@
   <div class="w-full flex flex-wrap justify-center gap-10 pb-10 pt-2">
     <!-- login form -->
     <div class="w-full md:w-1/3 bg-gray-900 bg-opacity-90 mx-5 md:mx-0 p-5">
-      <form action="/users/login" method="POST" class="flex flex-col gap-4">
+      <form action="/v1/users/login" method="POST" class="flex flex-col gap-4">
         <h2 class="text-center text-2xl font-medium">Login</h2>
         <p class="text-xl">Already a user?</p>
         <div class="w-full">
@@ -45,7 +45,7 @@
 
     <!-- registration form -->
     <div class="w-full md:w-1/3 bg-gray-900 bg-opacity-90 mx-5 md:mx-0 p-5">
-      <form action="/users/register" method="POST" class="flex flex-col gap-4">
+      <form action="/v1/users/register" method="POST" class="flex flex-col gap-4">
         <h2 class="text-center text-2xl font-medium">Register</h2>
         <% if (locals.successfulRegistration) { %>
         <p class="text-center text-green-300">

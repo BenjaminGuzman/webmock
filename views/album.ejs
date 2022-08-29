@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Super mock - Home</title>
-    <link rel="stylesheet" href="/css/mock.css">
+    <link rel="stylesheet" href="/v1/css/mock.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body class="bg-gray-900 px-5 text-white">
@@ -16,7 +16,7 @@
 <%- include('cart-status', {username, cart}) %>
 
 <div class="flex justify-center mx-4 md:mx-8 xl:mx-16 py-5 gap-3">
-    <img src="<%- album.cover %>" alt="<%= album.title %>">
+    <img src="/v1<%- album.cover %>" alt="<%= album.title %>">
     <div class="flex flex-col h-full gap-3 items-start">
         <p class="text-3xl"><%= album.title %></p>
         <p class="text-xl">by <span class="font-bold"><%= album.artist.name %></span></p>
@@ -24,8 +24,8 @@
             <span class="material-icons">music_note</span>
             <span><%= album.tracks.length %></span>
         </div>
-        <a target="_blank" href="<%- album.link %>" title="<%= album.title %> on Deezer" class="flex gap-2 items-center">
-            <img src="/img/deezer.min.webp" alt="" class="w-8 h-8">
+        <a target="_blank" href="/v1<%- album.link %>" title="<%= album.title %> on Deezer" class="flex gap-2 items-center">
+            <img src="/v1/img/deezer.min.webp" alt="" class="w-8 h-8">
             <span class="link">Deezer</span>
         </a>
     </div>
@@ -37,10 +37,10 @@
             <div class="flex-grow">
                 <p class="w-full mb-2"><%= track.title %></p>
                 <p>$<%= track.price %> USD</p>
-                <audio class="w-full" src="<%= track.preview %>" controls></audio>
+                <audio class="w-full" src="/v1<%= track.preview %>" controls></audio>
             </div>
-            <a target="_blank" href="<%= track.link %>" title="Listen to <%= track.title %> on Deezer">
-                <img src="/img/deezer.min.webp" alt="Deezer" class="w-8 h-8">
+            <a target="_blank" href="/v1<%= track.link %>" title="Listen to <%= track.title %> on Deezer">
+                <img src="/v1/img/deezer.min.webp" alt="Deezer" class="w-8 h-8">
             </a>
             <button onclick="addTrack2Cart(<%= track.id %>, this)"
                     class="enabled:active:scale-90 transition-transform <%- cartMap.tracks[track.id] ? 'opacity-50' : ''%>"
@@ -52,6 +52,6 @@
     <% }); %>
 </div>
 
-<script src="/js/cart.js" defer></script>
+<script src="/v1/js/cart.js" defer></script>
 </body>
 </html>

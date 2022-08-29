@@ -3,7 +3,7 @@ const initDB = async (btn) => {
   btn.disabled = true;
   btn.style.opacity = "0.5";
 
-  const res = await fetch("/populate", {
+  const res = await fetch("/v1/populate", {
     method: "POST",
   });
 

@@ -90,7 +90,7 @@ export class UsersController {
       });
     }
 
-    return res.redirect("/");
+    return res.redirect("/v1");
   }
 
   @Get("/logout")
@@ -102,6 +102,6 @@ export class UsersController {
       });
     });
 
-    return res.redirect("/");
+    return res.redirect("/v1");
   }
 }
