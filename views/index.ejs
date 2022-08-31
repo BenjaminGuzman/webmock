@@ -83,6 +83,14 @@
           <label class="w-full" for="register-password-confirmation">Password confirmation</label>
           <input type="password" name="passwordConfirmation" id="register-password-confirmation" class="w-full">
         </div>
+	<div class="w-full">
+          <label class="w-full" for="register-gender">Gender</label>
+	  <select name="gender" id="register-gender">
+            <option value="RATHER_NOT_SAY" selected>Rather not say</option>
+	    <option value="MALE">Male</option>
+	    <option value="FEMALE">Female</option>
+	  </select>
+	</div>
         <% if (locals.registrationErrors && registrationErrors.length > 0) { %>
           <p class="text-red-500">
             <% for (const error of registrationErrors) { %>

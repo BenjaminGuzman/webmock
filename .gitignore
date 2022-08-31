@@ -44,5 +44,8 @@ db/employees_schema.sql
 .env
 .env.prod
 
+backend/
+frontend/
+
 # tailwind auto generated
 public/css/mock.css
