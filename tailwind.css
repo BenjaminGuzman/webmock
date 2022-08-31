@@ -10,6 +10,10 @@ input {
     @apply text-white bg-gray-700 px-2 py-1 focus:outline-none;
 }
 
+select {
+    @apply text-white bg-gray-700 px-2 py-1;
+}
+
 .btn-primary {
     @apply px-2 py-1 rounded-md bg-white text-black hover:text-white hover:bg-black transition-colors;
 }
