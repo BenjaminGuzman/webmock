@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  firstName: String!
+  lastName: String!
+
+  """Date of birth in ISO 8601 (js default)"""
+  dob: String!
+  email: String!
+  username: String!
+  gender: Gender!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  RATHER_NOT_SAY
+}
+
+type Query {
+  login(username: String!, password: String!): String!
+}
+
+type Mutation {
+  registerUser(userData: UserRegistrationInput!): User!
+}
+
+input UserRegistrationInput {
+  firstName: String!
+  lastName: String!
+
+  """Date of birth in ISO 8601 (js default)"""
+  dob: String!
+  email: String!
+  username: String!
+  password: String!
+  gender: String!
+}

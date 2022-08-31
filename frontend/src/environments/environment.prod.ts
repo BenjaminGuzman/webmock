@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  gqlBackend: "https://test.benjaminguzman.dev/graphql"
 };
