@@ -105,7 +105,7 @@ export class UsersResolver {
     if (!isPasswordOk)
       throw new ForbiddenException(null, "Invalid password");
 
-    const jwtPayload: JWTPayload = {id: user.id};
+    const jwtPayload: JWTPayload = {userId: user.id};
 
     return this.jwtService.sign(jwtPayload);
   }

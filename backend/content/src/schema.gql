@@ -1,0 +1,36 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Track {
+  id: Int!
+  title: String!
+  link: String!
+  preview: String!
+  price: Int!
+}
+
+type Album {
+  id: Int!
+  title: String!
+  link: String!
+
+  """URL to deezer's cover image"""
+  cover: String!
+  artist: Artist!
+  tracks: [Track!]!
+}
+
+type Artist {
+  id: Int!
+  name: String!
+  link: String!
+  picture: String!
+  nAlbums: Int!
+  nFans: Int!
+  albums: [Album!]!
+}
+
+type Query {
+  search(search: String): [Artist!]!
+}

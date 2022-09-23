@@ -1,7 +1,10 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Apollo, gql} from "apollo-angular";
 import {Subscription} from "rxjs";
+import {JWTService} from "../jwt.service";
+import {Location} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-index',
@@ -9,7 +12,7 @@ import {Subscription} from "rxjs";
   styleUrls: ['./index.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IndexComponent {
+export class IndexComponent implements OnInit {
   registerForm: FormGroup;
   loginForm: FormGroup;
 
@@ -79,7 +82,12 @@ export class IndexComponent {
     ])
   };
 
-  constructor(private apollo: Apollo, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    private apollo: Apollo,
+    private changeDetectorRef: ChangeDetectorRef,
+    private jwtService: JWTService,
+    private router: Router
+  ) {
     this.registerForm = new FormGroup(this.registerControls);
     this.loginForm = new FormGroup(this.loginControls);
 
@@ -90,12 +98,17 @@ export class IndexComponent {
     });
   }
 
+  ngOnInit() {
+    if (this.jwtService.jwt)
+      this.router.navigateByUrl("/content/artists");
+  }
+
   onLoginSubmit() {
     if (this.loginForm.invalid)
       return;
 
-    const subscription: Subscription = this.apollo.mutate<{registerUser: {username: string}}>({
-      mutation: gql`
+    const subscription: Subscription = this.apollo.query<{login: string}>({
+      query: gql`
         query Login(
           $username: String!
           $password: String!
@@ -115,8 +128,9 @@ export class IndexComponent {
       next: (res) => {
         subscription.unsubscribe();
         if (!res.errors) {
-          // TODO handle successful login
           this.changeDetectorRef.markForCheck();
+          this.jwtService.jwt = res.data.login;
+          this.router.navigateByUrl("/content/artists");
           return;
         }
 

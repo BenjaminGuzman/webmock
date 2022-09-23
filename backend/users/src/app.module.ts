@@ -17,6 +17,7 @@ import { GraphQLError, GraphQLFormattedError } from "graphql/index";
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid("development", "production", "test"),
+        PORT: Joi.number().port(),
         DB_HOST: Joi.string(),
         DB_PORT: Joi.number(),
         DB_USERNAME: Joi.string(),
@@ -56,6 +57,7 @@ import { GraphQLError, GraphQLFormattedError } from "graphql/index";
       useFactory: async (config: ConfigService) => ({
         debug: config.get<string>("NODE_ENV") !== "production",
         autoSchemaFile: path.join(process.cwd(), "src/schema.gql"),
+        useGlobalPrefix: true,
         formatError: (error: GraphQLError) => {
           let message: string = error.message;
           if (error.originalError instanceof HttpException)

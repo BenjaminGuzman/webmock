@@ -1,0 +1,19 @@
+services:
+  users:
+    image: guzmanbenjamin/webmock-users:v2.0-alpha
+    restart: on-failure
+    ports:
+      - "127.0.0.1:4000:3000"
+    volumes:
+      - "./backend/users/.env.prod:/usr/src/.env"
+    links:
+      - "db:postgres"
+
+  db:
+    image: postgres
+    restart: on-failure
+    volumes:
+      - "./db/001-db-init.sh:/docker-entrypoint-initdb.d/001-db-init.sh"
+      - "./db/002-ddl.sql:/docker-entrypoint-initdb.d/002-ddl.sql"
+    environment:
+      - "POSTGRES_PASSWORD=pass"

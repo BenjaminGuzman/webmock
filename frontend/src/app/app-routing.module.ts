@@ -1,13 +1,22 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {IndexComponent} from "./index/index.component";
+import {AuthGuard} from "./auth.guard";
+import {ForbiddenComponent} from "./forbidden/forbidden.component";
 
-const routes: Routes = [{
-  path: "", component: IndexComponent
-}];
+const routes: Routes = [
+  {path: "", component: IndexComponent},
+  {
+    path: "content",
+    loadChildren: () => import("./content/content.module").then(m => m.ContentModule),
+    canActivate: [AuthGuard]
+  },
+  {path: "forbidden", component: ForbiddenComponent}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

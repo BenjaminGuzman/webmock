@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  gqlBackend: "http://localhost:3000/graphql"
+  usersUrl: "http://127.0.0.1:4000/v2/users/graphql"
 };
 
 /*

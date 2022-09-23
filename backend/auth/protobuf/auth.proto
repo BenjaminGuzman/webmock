@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+enum DecodeStatus {
+  VALID = 0;
+  EXPIRED = 1;
+  INVALID = 2;
+}
+
+message UserId {
+  string userId = 1;
+}
+
+message JWT {
+  string jwt = 1;
+}
+
+message DecodedJWT {
+  DecodeStatus status = 1;
+  string userId = 2;
+}
+
+service Auth {
+  rpc createJWT(UserId) returns (JWT) {}
+  rpc decodeJWT(JWT) returns (DecodedJWT) {}
+}

@@ -14,11 +14,14 @@ import {IndexComponent} from './index/index.component';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import {MatSelectModule} from "@angular/material/select";
+import { ArtistsComponent } from './content/artists/artists.component';
+import { ForbiddenComponent } from './forbidden/forbidden.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    IndexComponent
+    IndexComponent,
+    ForbiddenComponent
   ],
   imports: [
     BrowserModule,
