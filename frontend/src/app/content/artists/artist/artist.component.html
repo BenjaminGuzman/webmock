@@ -1,1 +1,29 @@
-<p>artist works!</p>
+<div class="flex flex-col px-4 py-5 gap-3">
+  <div style="background-image: url({{artistData.picture}})" class="bg-cover bg-center rounded-full w-48 h-48 hover:scale-110 transition-transform">
+    <a routerLink="/content/artist/{{artistData.id}}" class="h-full w-full bg-black bg-opacity-50 text-center items-center flex flex-col justify-center rounded-full artist-overlay">
+      <span class="font-medium artist-name">{{artistData.name}}</span>
+      <div class="flex flex-col justify-center absolute artist-extra-info">
+        <a target="_blank" href="{{artistData.link}}" title="{{artistData.name}} on Deezer">
+          <img src="/assets/img/deezer.min.webp" alt="" class="w-8 h-8">
+        </a>
+<!--        <div title="# fans" class="flex justify-center gap-1">-->
+<!--          <mat-icon>favorite</mat-icon>-->
+<!--          <span>{{artistData.nFans}}</span>-->
+<!--        </div>-->
+      </div>
+    </a>
+  </div>
+<!--  <div class="flex justify-around items-center gap-3">-->
+<!--    <a target="_blank" routerLink="{{artistData.link}}" title="{{artistData.name}} on Deezer">-->
+<!--      <img src="/assets/img/deezer.min.webp" alt="" class="w-8 h-8">-->
+<!--    </a>-->
+<!--    <div title="# fans" class="flex justify-center gap-1">-->
+<!--      <mat-icon>favorite</mat-icon>-->
+<!--      <span>{{artistData.nFans}}</span>-->
+<!--    </div>-->
+<!--    <div title="# albums" class="flex justify-center gap-1">-->
+<!--      <mat-icon>album</mat-icon>-->
+<!--      <span>{{artistData.nAlbums}}</span>-->
+<!--    </div>-->
+<!--  </div>-->
+</div>

@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { AlbumEntity } from "../albums/album.entity";
 
-@Entity()
+@Entity("tracks")
 export class TrackEntity {
   @PrimaryColumn("int")
   id: number;
@@ -19,5 +19,6 @@ export class TrackEntity {
   price: string;
 
   @ManyToOne(() => AlbumEntity, (album) => album.tracks)
+  @JoinColumn({name: "album_id"})
   album: AlbumEntity;
 }

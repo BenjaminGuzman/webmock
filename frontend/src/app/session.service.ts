@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class JWTService {
+export class SessionService {
   private _jwt: string | null = null;
 
   constructor() { }
@@ -31,7 +31,7 @@ export class JWTService {
   }
 
   /**
-   * Set the JWT to null
+   * Set the JWT to null (close session)
    */
   public clear() {
     this.jwt = null;

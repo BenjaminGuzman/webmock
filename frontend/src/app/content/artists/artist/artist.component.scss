@@ -1,0 +1,19 @@
+.artist-overlay {
+  .artist-name {
+    @apply transition-transform;
+  }
+
+  .artist-extra-info {
+    @apply opacity-0 transition-opacity;
+  }
+
+  &:hover {
+    .artist-name {
+      @apply translate-y-[-2rem];
+    }
+
+    .artist-extra-info {
+      @apply opacity-100;
+    }
+  }
+}

@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Apollo, gql} from "apollo-angular";
 import {Subscription} from "rxjs";
-import {JWTService} from "../jwt.service";
+import {SessionService} from "../session.service";
 import {Location} from "@angular/common";
 import {Router} from "@angular/router";
 
@@ -85,7 +85,7 @@ export class IndexComponent implements OnInit {
   constructor(
     private apollo: Apollo,
     private changeDetectorRef: ChangeDetectorRef,
-    private jwtService: JWTService,
+    private jwtService: SessionService,
     private router: Router
   ) {
     this.registerForm = new FormGroup(this.registerControls);

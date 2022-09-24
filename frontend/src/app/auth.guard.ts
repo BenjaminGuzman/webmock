@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import { Observable } from 'rxjs';
-import {JWTService} from "./jwt.service";
+import {SessionService} from "./session.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import {JWTService} from "./jwt.service";
 export class AuthGuard implements CanActivate {
   private readonly forbiddenUrl: UrlTree;
 
-  constructor(private jwtService: JWTService, private router: Router) {
+  constructor(private jwtService: SessionService, private router: Router) {
     this.forbiddenUrl = router.parseUrl("/forbidden");
   }
 

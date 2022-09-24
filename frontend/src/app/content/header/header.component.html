@@ -1,0 +1,20 @@
+<mat-toolbar class="sticky top-0 z-50 flex justify-between px-5">
+  <div>
+    <span>Super Mock</span>
+    <span *ngFor="let navItem of navigation">&nbsp;> <a [routerLink]="navItem.url" class="hover:underline">{{navItem.name}}</a></span>
+  </div>
+
+  <div>
+    <button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+
+
+<!--  <mat-form-field appearance="standard">-->
+<!--    <mat-label>Search</mat-label>-->
+<!--    <input matInput placeholder="Placeholder">-->
+<!--    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+<!--    <mat-hint>Hint</mat-hint>-->
+<!--  </mat-form-field>-->
+</mat-toolbar>

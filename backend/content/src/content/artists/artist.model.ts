@@ -9,16 +9,16 @@ export class Artist {
   @Field()
   name: string;
 
-  @Field()
+  @Field({nullable: true})
   link?: string;
 
-  @Field()
+  @Field({nullable: true})
   picture?: string;
 
-  @Field(() => Int)
+  @Field(() => Int, {nullable: true})
   nAlbums?: number;
 
-  @Field(() => Int)
+  @Field(() => Int, {nullable: true})
   nFans?: number;
 
   @Field(() => [Album])

@@ -1,18 +1,20 @@
 import { BadRequestException } from "@nestjs/common";
-import { Args, Query, Resolver } from "@nestjs/graphql";
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Artist } from "./artist.model";
 import { ArtistEntity } from "./artist.entity";
 import { ArtistService } from "./artist.service";
+import { AlbumService } from "../albums/album.service";
 
 @Resolver(() => Artist)
 export class ArtistResolver {
   constructor(
-    private artistService: ArtistService
+    private artistService: ArtistService,
+    private albumsService: AlbumService
   ) {
   }
 
   @Query(() => [Artist])
-  async search(
+  async artistSearch(
     @Args("search", {type: () => String, nullable: true}) search
     // TODO add pagination...
   ): Promise<Artist[]> {
@@ -23,6 +25,19 @@ export class ArtistResolver {
       throw new BadRequestException("Only letters are allowed");
 
     return (await this.artistService.search(search)).map(ArtistResolver.typeormArtist2GQL);
+  }
+
+  @Mutation(() => Int)
+  async initialize() {
+    // TODO receive as input an array of artists?
+    this.artistService.initialize();
+    return 0;
+  }
+
+  @ResolveField()
+  async albums(@Parent() artist: Artist) {
+    // FIXME: Solve the N+1 problem!
+    return this.albumsService.getByArtistId(artist.id);
   }
 
   private static typeormArtist2GQL(artist: ArtistEntity): Artist {

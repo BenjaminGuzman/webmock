@@ -1,7 +1,7 @@
 import { Entity, Column, OneToMany, PrimaryColumn } from "typeorm";
 import { AlbumEntity } from "../albums/album.entity";
 
-@Entity()
+@Entity("artists")
 export class ArtistEntity {
   @PrimaryColumn("int")
   id: number;
@@ -15,10 +15,10 @@ export class ArtistEntity {
   @Column("varchar", { nullable: true })
   picture: string;
 
-  @Column("int", { nullable: true })
+  @Column("int", { nullable: true, name: "n_albums" })
   nAlbums: number;
 
-  @Column("int", { nullable: true })
+  @Column("int", { nullable: true, name: "n_fans" })
   nFans: number;
 
   @OneToMany(() => AlbumEntity, (album) => album.artist)

@@ -8,10 +8,10 @@ export class Track {
   @Field()
   title: string;
 
-  @Field()
+  @Field({nullable: true})
   link?: string;
 
-  @Field()
+  @Field({nullable: true})
   preview?: string;
 
   @Field(() => Int)
