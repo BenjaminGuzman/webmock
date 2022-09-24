@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Artist} from "./Artist";
+import {Artist} from "./artist";
 
 @Component({
   selector: 'app-artist',

@@ -28,6 +28,8 @@ export class SessionService {
 
     if (jwt !== null)
       localStorage.setItem("jwt", jwt);
+    else
+      localStorage.removeItem("jwt");
   }
 
   /**

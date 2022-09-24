@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Apollo, gql} from "apollo-angular";
 import {Subscription} from "rxjs";
-import {Artist} from "./artist/Artist";
+import {Artist} from "./artist/artist";
 
 @Component({
   selector: 'app-artists',
@@ -69,7 +69,7 @@ export class ArtistsComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         subscription.unsubscribe();
-        setTimeout(() => this.fetchArtists(), 5_000); // wait some time for the database to be populated
+        setTimeout(() => this.fetchArtists(), 30_000); // wait some time for the database to be populated
       },
       error: (e: Error) => {
         subscription.unsubscribe();

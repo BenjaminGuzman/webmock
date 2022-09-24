@@ -1,1 +1,12 @@
-<p>album works!</p>
+<div class="flex flex-col justify-center items-center text-center gap-3">
+  <div [routerLink]="['/content/album', albumData.id]" class="relative cursor-pointer">
+    <img src="{{albumData.cover}}" alt="{{albumData.title}}" class="block max-w-[12rem] hover:scale-110 transition-transform">
+
+    <div class="absolute w-full h-full bg-black top-0 flex items-center justify-center transition-opacity duration-150 cover-overlay">
+      <a target="_blank" href="{{albumData.link}}">
+        <img src="/assets/img/deezer.min.webp" alt="{{albumData.title}} on Deezer" class="w-10 h-10">
+      </a>
+    </div>
+  </div>
+  <a [routerLink]="['/content/album', albumData.id]" class="link">{{albumData.title}}</a>
+</div>

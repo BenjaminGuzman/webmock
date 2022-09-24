@@ -6,20 +6,11 @@ import { ContextIdFactory, ModuleRef, REQUEST } from "@nestjs/core";
 import { AlbumEntity } from "../albums/album.entity";
 
 @Injectable()
-export class TrackService implements OnModuleInit {
-  private tracksRepo: Repository<TrackEntity>;
-
+export class TrackService {
   constructor(
-    /*@InjectRepository(TrackEntity)
-    private tracksRepo: Repository<TrackEntity>*/
-    private moduleRef: ModuleRef,
-    @Inject(REQUEST) private request: Record<string, unknown>
+    @InjectRepository(TrackEntity)
+    private tracksRepo: Repository<TrackEntity>
   ) {
-  }
-
-  async onModuleInit() {
-    const contextId = ContextIdFactory.getByRequest(this.request);
-    this.tracksRepo = await this.moduleRef.resolve(getRepositoryToken(TrackEntity), contextId);
   }
 
   getByIds(ids: number[]): Promise<TrackEntity[]> {
@@ -30,6 +21,10 @@ export class TrackService implements OnModuleInit {
 
   getById(id: number): Promise<TrackEntity> {
     return this.tracksRepo.findOneBy({id: id});
+  }
+
+  getByAlbumId(albumId: number): Promise<TrackEntity[]> {
+    return this.tracksRepo.findBy({album: {id: albumId}});
   }
 
   search(search: string): Promise<TrackEntity[]> {

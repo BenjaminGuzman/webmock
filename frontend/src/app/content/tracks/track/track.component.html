@@ -1,1 +1,13 @@
-<p>track works!</p>
+<div class="flex gap-3 items-end">
+  <div class="flex-grow">
+    <p class="w-full mb-2">{{trackData.title}}</p>
+    <p>${{trackData.price}} USD</p>
+    <audio class="w-full" src="{{trackData.preview}}" controls></audio>
+  </div>
+  <a target="_blank" href="{{trackData.link}}" matTooltip="Listen to {{trackData.title}} on Deezer">
+    <img src="/assets/img/deezer.min.webp" alt="Deezer" class="w-8 h-8">
+  </a>
+  <button class="enabled:active:scale-90 transition-transform">
+    <mat-icon>add_shopping_cart</mat-icon>
+  </button>
+</div>

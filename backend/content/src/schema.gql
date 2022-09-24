@@ -33,6 +33,8 @@ type Artist {
 
 type Query {
   artistSearch(search: String): [Artist!]!
+  artistById(id: ID!): Artist
+  albumById(id: ID!): Album
 }
 
 type Mutation {

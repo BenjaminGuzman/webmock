@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Artist } from "./artist.model";
 import { ArtistEntity } from "./artist.entity";
 import { ArtistService } from "./artist.service";
@@ -25,6 +25,19 @@ export class ArtistResolver {
       throw new BadRequestException("Only letters are allowed");
 
     return (await this.artistService.search(search)).map(ArtistResolver.typeormArtist2GQL);
+  }
+
+  @Query(() => Artist, {nullable: true})
+  async artistById(@Args("id", {type: () => ID, nullable: false}) artistId): Promise<Artist | null> {
+    if (!/^[\d+]+$/.test(artistId))
+      return null;
+
+    const id: number = parseInt(artistId);
+    const artistEntity: ArtistEntity = await this.artistService.getById(id);
+    if (!artistEntity)
+      return null;
+
+    return ArtistResolver.typeormArtist2GQL(artistEntity);
   }
 
   @Mutation(() => Int)

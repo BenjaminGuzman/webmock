@@ -58,6 +58,7 @@ import { JwtStrategy } from "./JWTStrategy";
         debug: config.get<string>("NODE_ENV") !== "production",
         autoSchemaFile: path.join(process.cwd(), "src/schema.gql"),
         useGlobalPrefix: true,
+        cache: "bounded",
         formatError: (error: GraphQLError) => {
           let message: string = error.message;
           if (error.originalError instanceof HttpException)

@@ -1,1 +1,26 @@
-<p>tracks works!</p>
+<app-header [navigation]="navigation"></app-header>
+<div>
+  <div *ngIf="isLoading">
+    Loading...
+  </div>
+  <div *ngIf="!isLoading" class="w-full md:w-5/6 h-full flex flex-col gap-3 justify-center mx-5 md:mx-auto">
+    <div class="my-5 flex gap-x-5 w-full justify-center">
+      <img src="{{album.cover}}" alt="{{album.title}}">
+      <div class="flex flex-col gap-3">
+        <h2>{{album.title}}</h2>
+        <h3>by <span class="font-medium">{{artist.name}}</span></h3>
+        <a target="_blank" href="{{album.link}}" class="flex items-center gap-2">
+          <img src="/assets/img/deezer.min.webp" alt="" class="w-8 h-8"/>
+          <span>{{album.title}} on Deezer</span>
+        </a>
+      </div>
+    </div>
+    <p class="text-xl">Tracks</p>
+    <div class="w-full mx-auto md:w-1/2">
+      <app-search-bar label="Search tracks" placeholder="What a time"></app-search-bar>
+    </div>
+    <div class="flex flex-col justify-around gap-4 md:gap-8">
+      <app-track *ngFor="let track of tracks" [trackData]="track"></app-track>
+    </div>
+  </div>
+</div>

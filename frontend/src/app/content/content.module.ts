@@ -14,7 +14,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
-import { SearchBarComponent } from './search-bar/search-bar.component';
+import {SearchBarComponent} from './search-bar/search-bar.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 
 

@@ -11,11 +11,11 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ReactiveFormsModule} from "@angular/forms";
 import {IndexComponent} from './index/index.component';
-import { GraphQLModule } from './graphql.module';
-import { HttpClientModule } from '@angular/common/http';
+import {GraphQLModule} from './graphql.module';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatSelectModule} from "@angular/material/select";
-import { ArtistsComponent } from './content/artists/artists.component';
-import { ForbiddenComponent } from './forbidden/forbidden.component';
+import {ForbiddenComponent} from './forbidden/forbidden.component';
+import {AuthInterceptor} from "./auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -37,7 +37,7 @@ import { ForbiddenComponent } from './forbidden/forbidden.component';
     HttpClientModule,
     MatSelectModule
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

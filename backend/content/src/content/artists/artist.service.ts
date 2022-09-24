@@ -29,6 +29,19 @@ export class ArtistService {
     return this.artistsRepo.findOneBy({id: id});
   }
 
+  async getByAlbumId(albumId: number): Promise<ArtistEntity> {
+    const res: any[] = await this.artistsRepo.query(`SELECT artists.* FROM artists INNER JOIN albums ON artists.id = albums.artist_id WHERE albums.id = $1 LIMIT 1`, [albumId]);
+    if (!res || res.length === 0)
+      return null;
+
+    const artist = res[0];
+    artist.nAlbums = artist.n_albums;
+    artist.nFans = artist.n_fans;
+    delete artist.n_fans;
+    delete artist.n_albums;
+    return artist;
+  }
+
   /**
    * Get all available artists
    * TODO implement pagination...
@@ -75,13 +88,17 @@ export class ArtistService {
       "Kavinsky",
       "Martin garrix",
       "Gabylonia",
-      "C-kan"
+      "C-kan",
+      "Adele",
+      "The Rocky Soloists & Orchestra"
     ];
 
     try {
       const nRegisteredArtists = await this.artistsRepo.count();
-      if (nRegisteredArtists > 0)
+      if (nRegisteredArtists > 0) {
+        console.log("Database already initialized...");
         return false;
+      }
     } catch (e) {
       console.error(e);
     }
@@ -97,10 +114,7 @@ export class ArtistService {
           .accept("application/json"),
       )
       .map((p) => p.then((res) => res.body).catch(console.error))
-      .map((p) => p.then((body) => {
-        console.log(body.data, body);
-        return body.data[0];
-      }))
+      .map((p) => p.then((body) => body.data[0]))
       .map((p) =>
         p.then((deezerArtist: DeezerArtist) => {
           const artist = new ArtistEntity();

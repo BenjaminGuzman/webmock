@@ -4,17 +4,12 @@
     <span *ngFor="let navItem of navigation">&nbsp;> <a [routerLink]="navItem.url" class="hover:underline">{{navItem.name}}</a></span>
   </div>
 
-  <div>
+  <div class="flex gap-x-5">
+    <button routerLink="/cart" matTooltip="See your shopping cart">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
     <button (click)="logout()" matTooltip="Logout">
       <mat-icon>logout</mat-icon>
     </button>
   </div>
-
-
-<!--  <mat-form-field appearance="standard">-->
-<!--    <mat-label>Search</mat-label>-->
-<!--    <input matInput placeholder="Placeholder">-->
-<!--    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
-<!--    <mat-hint>Hint</mat-hint>-->
-<!--  </mat-form-field>-->
 </mat-toolbar>

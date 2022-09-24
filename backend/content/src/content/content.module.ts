@@ -7,11 +7,12 @@ import { ArtistService } from "./artists/artist.service";
 import { AlbumService } from "./albums/album.service";
 import { TrackService } from "./tracks/track.service";
 import { ArtistResolver } from "./artists/artist.resolver";
+import { AlbumResolver } from "./albums/album.resolver";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ArtistEntity, AlbumEntity, TrackEntity])
   ],
-  providers: [ArtistService, AlbumService, TrackService, ArtistResolver]
+  providers: [ArtistService, AlbumService, TrackService, ArtistResolver, AlbumResolver]
 })
 export class ContentModule {}
