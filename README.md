@@ -31,7 +31,8 @@ Your configuration should look like this:
 ```
 server {
     // ... your server config ...
-    
+
+    error_page 404 /; # let angular handle 404
     root /var/www/html/dist/webmock;
 }
 ```
