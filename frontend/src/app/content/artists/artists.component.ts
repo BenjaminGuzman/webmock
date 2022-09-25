@@ -21,7 +21,7 @@ export class ArtistsComponent implements OnInit {
     this.fetchArtists();
   }
 
-  private fetchArtists() {
+  private fetchArtists(fetchPolicy?: "no-cache") {
     const subscription: Subscription = this.apollo.query<{artistSearch: Artist[]}>({
       query: gql`query {
         artistSearch {
@@ -32,7 +32,8 @@ export class ArtistsComponent implements OnInit {
           nAlbums
           nFans
         }
-      }`
+      }`,
+      fetchPolicy: fetchPolicy
     }).subscribe({
       next: (res) => {
         subscription.unsubscribe();
@@ -69,7 +70,7 @@ export class ArtistsComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         subscription.unsubscribe();
-        setTimeout(() => this.fetchArtists(), 30_000); // wait some time for the database to be populated
+        setTimeout(() => this.fetchArtists("no-cache"), 30_000); // wait some time for the database to be populated
       },
       error: (e: Error) => {
         subscription.unsubscribe();

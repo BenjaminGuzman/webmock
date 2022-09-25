@@ -183,7 +183,8 @@ export class IndexComponent implements OnInit {
         email: this.registerControls.email.value,
         gender: this.registerControls.gender.value
       },
-      errorPolicy: "all"
+      errorPolicy: "all",
+      fetchPolicy: "no-cache"
     }).subscribe({
       next: (res) => {
         subscription.unsubscribe();
