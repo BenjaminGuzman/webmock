@@ -15,25 +15,26 @@ export class ArtistsComponent implements OnInit {
   public isLoading: boolean = true;
   public isDBInitialized: boolean = true;
 
+  private readonly artistQuery = gql`query {
+    artistSearch {
+      id
+      name
+      link
+      picture
+      nAlbums
+      nFans
+    }
+  }`;
+
   constructor(private apollo: Apollo, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.fetchArtists();
   }
 
-  private fetchArtists(fetchPolicy?: "no-cache") {
+  private fetchArtists() {
     const subscription: Subscription = this.apollo.query<{artistSearch: Artist[]}>({
-      query: gql`query {
-        artistSearch {
-          id
-          name
-          link
-          picture
-          nAlbums
-          nFans
-        }
-      }`,
-      fetchPolicy: fetchPolicy
+      query: this.artistQuery
     }).subscribe({
       next: (res) => {
         subscription.unsubscribe();
@@ -67,11 +68,12 @@ export class ArtistsComponent implements OnInit {
     const subscription: Subscription = this.apollo.mutate({
       mutation: gql`mutation {
         initialize
-      }`
+      }`,
+      refetchQueries: [{query: this.artistQuery}]
     }).subscribe({
       next: (res) => {
         subscription.unsubscribe();
-        setTimeout(() => this.fetchArtists("no-cache"), 30_000); // wait some time for the database to be populated
+        setTimeout(() => this.fetchArtists(), 30_000); // wait some time for the database to be populated
       },
       error: (e: Error) => {
         subscription.unsubscribe();
