@@ -45,13 +45,13 @@ Notify selinux.
 ```
 server {
     // ... your server config ...
-    location /v2/content {
-        proxy_pass              http://localhost:5000;
-        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-    
     location /v2/users {
         proxy_pass              http://localhost:4000;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /v2/content {
+        proxy_pass              http://localhost:5000;
         proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }

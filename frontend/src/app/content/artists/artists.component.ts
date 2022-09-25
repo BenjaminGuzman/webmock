@@ -46,6 +46,7 @@ export class ArtistsComponent implements OnInit {
           return;
         }
 
+        this.isDBInitialized = true;
         this.artists = res.data.artistSearch;
         this.changeDetectorRef.markForCheck();
       },
