@@ -2,15 +2,9 @@
 
 You need to set up version 1 before starting version 2
 
-## Running the app
+## Architecture
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-```
+![Architecture](docs/arch.png)
 
 ## Deploy
 
@@ -21,6 +15,7 @@ $ npm run start:dev
 scp -r db/ user@testing.example.com:~/v2/db/
 scp docker-compose.yml user@testing.example.com:~/v2
 scp backend/users/.env.prod user@testing.example.com:~/v2/backend/users/.env.prod 
+scp backend/content/.env.prod user@testing.example.com:~/v2/backend/content/.env.prod 
 ```
 
 2. Build and copy frontend
@@ -41,11 +36,28 @@ server {
 }
 ```
 
-And you need to notify selinux.
+Notify selinux.
 
 ```chcon -R -t httpd_sys_content_t /var/www/html/dist/webmock```
 
-4. Start the application
+4. Make NGINX act as gateway
+
+```
+server {
+    // ... your server config ...
+    location /v2/content {
+        proxy_pass              http://localhost:5000;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    
+    location /v2/users {
+        proxy_pass              http://localhost:4000;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+5. Start the application
 
 ```bash
 # (run on server)
@@ -56,14 +68,7 @@ sudo docker compose up -d
 
 ### Special endpoints
 
-These endpoints don't need a request body, and usually they won't return a response body.
-So, to check the operation was successfully you may check the response status code. 
-
-- DELETE `/music`: Will clear the music database (users will remain intact)
-
-- DELETE `/users`: Will clear all the users' database (music will remain intact)
-
-- POST `/populate`: Will insert some artists, albums and tracks in the database
+There are no special endpoints in v2, yet...
 
 ## License
 

@@ -18,6 +18,7 @@ import { GraphQLError, GraphQLFormattedError } from "graphql/index";
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid("development", "production", "test"),
         PORT: Joi.number().port(),
+        BIND_IP: Joi.string(),
         DB_HOST: Joi.string(),
         DB_PORT: Joi.number(),
         DB_USERNAME: Joi.string(),

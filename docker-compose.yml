@@ -1,4 +1,14 @@
 services:
+  content:
+    image: guzmanbenjamin/webmock-content:v2.0-alpha
+    restart: on-failure
+    ports:
+      - "127.0.0.1:5000:3000"
+    volumes:
+      - "./backend/content/.env.prod:/usr/src/.env"
+    links:
+      - "db:postgres"
+
   users:
     image: guzmanbenjamin/webmock-users:v2.0-alpha
     restart: on-failure

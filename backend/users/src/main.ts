@@ -9,6 +9,6 @@ async function bootstrap() {
 
   const config = app.get<ConfigService>(ConfigService);
 
-  await app.listen(config.get("PORT"));
+  await app.listen(config.get("PORT"), config.get("BIND_IP"));
 }
 bootstrap();
